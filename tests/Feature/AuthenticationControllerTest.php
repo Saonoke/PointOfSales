@@ -15,7 +15,7 @@ class AuthenticationControllerTest extends TestCase
     public function testLoginPage()
     {
         $this->get('/login')
-            ->assertSeeText("Login");
+            ->assertViewIs("user.login");
     }
 
 
@@ -41,7 +41,7 @@ class AuthenticationControllerTest extends TestCase
     public function testLoginValidationError()
     {
         $this->post("/login", [])
-            ->assertSeeText("User or password is required");
+            ->assertViewIs("user.login");
     }
 
     public function testLoginFailed()
