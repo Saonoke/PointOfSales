@@ -23,7 +23,6 @@ class AuthenticationServiceImpl implements AuthenticationService{
             ]);
         }
 
-
         if ($this->login($email, $password)) {
             $request->session()->put("email", $email);
             return redirect("/");

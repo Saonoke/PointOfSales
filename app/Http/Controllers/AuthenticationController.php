@@ -1,37 +1,4 @@
 <?php
-
-// namespace App\Http\Controllers;
-
-// use Illuminate\Http\Response;
-// use Illuminate\Http\Request;
-// use App\Services\AuthenticationService;
-
-// class AuthenticationController extends Controller
-// {
-//     private $authenticationService;
-
-//     public function __construct(AuthenticationService $authenticationService)
-//     {
-//         $this->authenticationService = $authenticationService;
-//     }
-
-//     public function login(): Response
-//     {
-//         return response()
-//             ->view("user.login", [
-//                 "title" => "Login"
-//             ]);
-//     }
-
-//     public function doLogin(Request $request)
-//     {
-//         // Call the authenticate method from the AuthenticationService
-//         return $this->authenticationService->authenticate($request);
-//     }
-// }
-
-
-
 namespace App\Http\Controllers;
 
 use App\Services\AuthenticationService;
@@ -67,7 +34,7 @@ class AuthenticationController extends Controller
 
     public function doLogout(Request $request): RedirectResponse
     {
-        $request->session()->forget("user");
+        $request->session()->forget("email");
         return redirect("/");
     }
 }
