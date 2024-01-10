@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Contracts\UserContract;
 use App\Http\Requests\UserPostRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+
 
 class UserService implements UserContract{
 
