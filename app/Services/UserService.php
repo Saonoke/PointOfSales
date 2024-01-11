@@ -16,8 +16,11 @@ class UserService implements UserContract{
         // Retrieve the validated input data...
         $validated = $request->validated();
 
+        // Hash the password using MD5
+        $validated['password'] = bcrypt($validated['password']);
+
         // Create a new User instance using the validated data...
-        User::create($validated->all());
+        User::create($validated);
 
         return redirect()->route('user.index')->with('success', 'User created successfully.');
     }
@@ -26,7 +29,12 @@ class UserService implements UserContract{
 
         $validated = $request->validated();
 
-        $user->update($validated->all());
+        // Hash the password using MD5 
+        if (isset($validated['password'])) {
+            $validated['password'] = bcrypt($validated['password']);
+        }
+
+        $user->update($validated);
 
         return redirect()->route('user.index')->with('success', 'User updated successfully.');
     }
