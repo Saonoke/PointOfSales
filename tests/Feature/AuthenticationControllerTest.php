@@ -17,25 +17,32 @@ class AuthenticationControllerTest extends TestCase
         $this->get('/login')
             ->assertViewIs("user.login");
     }
-
+    public function testLoginPageForMember()
+    {
+        $this->withSession([
+            "userData.role" => "admin"
+        ])->get('/login')
+        ->assertRedirect('/adminDashboard')
+        ;
+    }
 
     public function testLoginSuccess()
     {
         $this->post('/login', [
-            "email" => "putri",
-            "password" => "11111"
-        ])->assertRedirect("/")
-            ->assertSessionHas("email", "putri");
+            "email" => "kou@gmail.com",
+            "password" => "asdf"
+        ])->assertRedirect("/adminDashboard");
     }
+    
 
     public function testLoginForUserAlreadyLogin()
     {
         $this->withSession([
-            "email" => "putri"
+            "email" => "kou@gmail.com"
         ])->post('/login', [
-            "email" => "putri",
-            "password" => "11111"
-        ])->assertRedirect("/");
+            "email" => "kou@gmail.com",
+            "password" => "asdf"
+        ])->assertRedirect("/adminDashboard");
     }
 
     public function testLoginValidationError()
@@ -55,8 +62,18 @@ class AuthenticationControllerTest extends TestCase
     public function testLogout()
     {
         $this->withSession([
-            "email" => "putri"
+            "email" => "kou@gmail.com"
         ])->post('/logout')
         ->assertRedirect("/");
     }
+
+    public function testLogoutGuest()
+    {
+        $this->post('/logout')
+        ->assertRedirect("/");
+    }
+
+
+
+
 }

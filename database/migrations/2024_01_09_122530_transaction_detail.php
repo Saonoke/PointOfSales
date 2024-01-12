@@ -10,13 +10,10 @@ return new class extends Migration
     {
         Schema::create('transaction_detail', function (Blueprint $table) {
             $table->unsignedBigInteger('transaction_id');
-            $table->unsignedBigInteger('good_id');
+            $table->unsignedBigInteger('item_id');
             $table->integer('qty');
-
-            $table->timestamps();
-
             $table->foreign('transaction_id')->references('id')->on('transaction');
-            $table->foreign('good_id')->references('id')->on('goods');
+            $table->foreign('item_id')->references('id')->on('item');
         });
     }
 

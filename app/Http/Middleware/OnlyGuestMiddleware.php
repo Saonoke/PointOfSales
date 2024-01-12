@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class OnlyGuestMiddleware
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        if($request->session()->exists("userData")){
+            if(session('userData.role') == 'admin'){
+                return redirect("/adminDashboard");
+            } else {
+                return redirect("/cashierDashboard");
+            };
+
+            var_dump(session('userData.email'));
+        } else {
+            return $next($request);
+        }
+        
+    }
+}
