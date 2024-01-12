@@ -7,15 +7,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 class AuthenticationServiceImpl implements AuthenticationService{
 
-    private array $users = [
-        "putri" => "11111"
-    ];
-
     function authenticate(Request $request){
         $email = $request->input('email');
         $password = $request->input('password');
 
-        // validate input
+        // Validate input
         if (empty($email) || empty($password)) {
             return response()->view("user.login", [
                 "title" => "Login",
@@ -23,26 +19,26 @@ class AuthenticationServiceImpl implements AuthenticationService{
             ]);
         }
 
-        if ($this->login($email, $password)) {
-            $request->session()->put("email", $email);
-            return redirect("/");
-        }
+        $credentials = [
+            'email' => $request->email,
+            'password' => $request->password,
+        ];
 
-        return response()->view("user.login", [
+        if(Auth::attempt($credentials)){
+            if(Auth::user()->role=='admin'){
+                $request->session()->put("email", $email);
+                return redirect("/adminDashboard");
+            } else {
+                $request->session()->put("email", $email);
+                return redirect("/cashierDashboard");
+            }
+
+        } else {
+            return response()->view("user.login", [
             "title" => "Login",
             "error" => "User or password is wrong"
         ]);
-    }
-
-    function login(string $email, string $password): bool
-    {
-        if (!isset($this->users[$email])) {
-            return false;
         }
 
-        $correctPassword = $this->users[$email];
-        return $password == $correctPassword;
     }
-
-
 }
