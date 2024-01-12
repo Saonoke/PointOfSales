@@ -6,20 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-
-        Schema::create('member', function (Blueprint $table) {
+        Schema::create('kategori', function (Blueprint $table) {
             $table->id();
-
-            $table->string('member_name');
-            $table->string('address');
-            $table->string('no_hp')->unique();
-            $table->integer('total_point');
-            $table->date('valid_until');
-
-
+            $table->string('nama_kategori');
         });
     }
 
@@ -28,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('member');
+        Schema::dropIfExists('kategori');
     }
 };
