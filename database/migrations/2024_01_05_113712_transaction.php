@@ -11,11 +11,10 @@ return new class extends Migration
     {
         Schema::create('transaction', function (Blueprint $table) {
             $table->id();
-            $table->date('transaction_date');
-            $table->float('total_purchase')->nullable();
-            $table->float('total_payment')->nullable();
-            $table->float('change')->nullable();
-            $table->timestamps();
+            $table->dateTime('transaction_date');
+            $table->decimal('total_purchase')->nullable();
+            $table->decimal('total_payment')->nullable();
+            $table->decimal('change')->nullable();
         });
     }
 

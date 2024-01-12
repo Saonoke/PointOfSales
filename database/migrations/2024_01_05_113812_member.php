@@ -16,8 +16,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('no_hp')->unique();
             $table->integer('total_point');
-            $table->date('validity_period');
-            $table->timestamps();
+            $table->date('valid_until');
 
         });
     }

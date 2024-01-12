@@ -15,7 +15,7 @@ class OnlyMemberMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->session()->exists("email")){
+        if($request->session()->exists("userData")){
             return $next($request);
         }else {
             return redirect("/");

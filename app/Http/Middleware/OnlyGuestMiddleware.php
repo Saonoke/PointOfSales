@@ -15,8 +15,14 @@ class OnlyGuestMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->session()->exists("email")){
-            return redirect("/");
+        if($request->session()->exists("userData")){
+            if(session('userData.role') == 'admin'){
+                return redirect("/adminDashboard");
+            } else {
+                return redirect("/cashierDashboard");
+            };
+
+            var_dump(session('userData.email'));
         } else {
             return $next($request);
         }

@@ -5,6 +5,9 @@ use App\Services\AuthenticationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+
 
 class AuthenticationController extends Controller
 {
@@ -25,16 +28,35 @@ class AuthenticationController extends Controller
                 "title" => "Login"
             ]);
     }
+    public function logout(): Response
+    {
+        return response()
+            ->view("user.login", [
+                "title" => "Login"
+            ]);
+    }
 
     public function doLogin(Request $request): Response|RedirectResponse
     {
-        // Call the authenticate method from the AuthenticationService
+        $validator = Validator::make($request->all(), [
+            'email' => ['required'],
+            'password' => ['required'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->view("user.login", [
+                "title" => "Login",
+                "error" => "User or password is required"
+            ]);
+        }
         return $this->authenticationService->authenticate($request);
     }
 
     public function doLogout(Request $request): RedirectResponse
     {
-        $request->session()->forget("email");
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect("/");
     }
 }

@@ -20,9 +20,10 @@ class AuthenticationControllerTest extends TestCase
     public function testLoginPageForMember()
     {
         $this->withSession([
-            "email" => "kou@gmail.com"
+            "userData.role" => "admin"
         ])->get('/login')
-        ->assertRedirect("/adminDashboard");
+        ->assertRedirect('/adminDashboard')
+        ;
     }
 
     public function testLoginSuccess()
@@ -30,8 +31,7 @@ class AuthenticationControllerTest extends TestCase
         $this->post('/login', [
             "email" => "kou@gmail.com",
             "password" => "asdf"
-        ])->assertRedirect("/adminDashboard")
-            ->assertSessionHas("email", "kou@gmail.com");
+        ])->assertRedirect("/adminDashboard");
     }
     
 
@@ -72,5 +72,8 @@ class AuthenticationControllerTest extends TestCase
         $this->post('/logout')
         ->assertRedirect("/");
     }
+
+
+
 
 }
