@@ -18,7 +18,7 @@ class UserController extends Controller
     }
 
     public function index(): View{
-        $user = User::latest();
+        $user = User::latest()->get();
 
         return view('user.index', compact('user'));
     }
@@ -27,18 +27,27 @@ class UserController extends Controller
     }
 
     public function storeUser(UserPostRequest $request): RedirectResponse{
-        return $this->contract->storeUser($request);
-    }
+        $validated = $request->validated();
+        $this->contract->storeUser($validated);
+        // return $this->contract->storeUser($request);
+
+        return redirect()->route('user.index')->with('success', 'User created successfully.');
+    }   
 
     public function updateUser(User $user): View{
         return view('user.edit',compact('user'));
     }
 
     public function editUser(UserPostRequest $request, User $user): RedirectResponse{
-        return $this->contract->editUser($request, $user);
+        $validated = $request->validated();
+        $this->contract->editUser($validated, $user);
+
+        return redirect()->route('user.index')->with('success', 'User updated successfully.');
     }
 
     public function deleteUser(User $user): RedirectResponse{
-        return $this->contract->deleteUser($user);
+        $this->contract->deleteUser($user);
+
+        return redirect()->route('user.index')->with('success', 'User deleted successfully.');
     }
 }
