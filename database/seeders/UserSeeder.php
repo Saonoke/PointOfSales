@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\User;
 
 
 class UserSeeder extends Seeder
@@ -23,14 +24,14 @@ class UserSeeder extends Seeder
                 'name' => 'kou',
                 'email' => 'kou@gmail.com',
                 'role' => 'admin',
-                'password' => bcrypt('asdf')
+                'password' => bcrypt('asdfasdf')
 
             ],
             [
                 'name' => 'futaba',
                 'email' => 'futaba@gmail.com',
                 'role' => 'kasir',
-                'password' => bcrypt('asdf')
+                'password' => bcrypt('asdfasdf')
 
             ]
         ];

@@ -24,29 +24,23 @@ class AuthenticationController extends Controller
     public function login(): Response
     {
         return response()
-            ->view("user.login", [
-                "title" => "Login"
-            ]);
-    }
-    public function logout(): Response
-    {
-        return response()
-            ->view("user.login", [
-                "title" => "Login"
-            ]);
+            ->view("user.login");
     }
 
     public function doLogin(Request $request): Response|RedirectResponse
     {
         $validator = Validator::make($request->all(), [
-            'email' => ['required'],
-            'password' => ['required'],
+            'email' => 'required',
+            'password' => 'required|min:8',
+        ], [
+            'email.required' => 'Email is required',
+            'password.required' => 'Password is required',
+            'password.min' => 'Password must be at least 8 characters',
         ]);
 
         if ($validator->fails()) {
             return response()->view("user.login", [
-                "title" => "Login",
-                "error" => "User or password is required"
+                "error" => $validator->errors()->first()
             ]);
         }
         return $this->authenticationService->authenticate($request);
@@ -57,6 +51,6 @@ class AuthenticationController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect("/");
+        return redirect("/login");
     }
 }

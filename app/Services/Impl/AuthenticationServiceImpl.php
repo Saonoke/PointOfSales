@@ -32,7 +32,7 @@ class AuthenticationServiceImpl implements AuthenticationService{
         } else {
             return response()->view("user.login", [
             "title" => "Login",
-            "error" => "User or password is wrong"
+            "error" => "Email or password is wrong"
         ]);
         }
 

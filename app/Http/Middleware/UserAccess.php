@@ -17,11 +17,10 @@ class UserAccess
      */
     public function handle(Request $request, Closure $next, $role): Response
     {
-        if (session('userData.role')== $role) {
+        if (session('userData.role') == $role) {
             return $next($request);
         } else {
-            return response()->json("You are not permitted to access this page");
-        }
-
+                return redirect("/login");
+            }
     }
 }

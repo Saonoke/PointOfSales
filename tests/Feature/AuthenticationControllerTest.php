@@ -30,7 +30,7 @@ class AuthenticationControllerTest extends TestCase
     {
         $this->post('/login', [
             "email" => "kou@gmail.com",
-            "password" => "asdf"
+            "password" => "asdfasdf"
         ])->assertRedirect("/adminDashboard");
     }
     
@@ -41,7 +41,7 @@ class AuthenticationControllerTest extends TestCase
             "email" => "kou@gmail.com"
         ])->post('/login', [
             "email" => "kou@gmail.com",
-            "password" => "asdf"
+            "password" => "asdfasdf"
         ])->assertRedirect("/adminDashboard");
     }
 
@@ -63,14 +63,14 @@ class AuthenticationControllerTest extends TestCase
     {
         $this->withSession([
             "email" => "kou@gmail.com"
-        ])->post('/logout')
-        ->assertRedirect("/");
+        ])->get('/logout')
+        ->assertRedirect("/login");
     }
 
     public function testLogoutGuest()
     {
-        $this->post('/logout')
-        ->assertRedirect("/");
+        $this->get('/logout')
+        ->assertRedirect("/login");
     }
 
 

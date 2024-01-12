@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class OnlyMemberMiddleware
+class UserMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,10 +15,13 @@ class OnlyMemberMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->session()->exists("userData")){
+        if ($request->session()->exists("userData")) {
+            if (session('userData.role') == 'admin') {
+                return redirect("/adminDashboard");
+            } else {
+                return redirect("/cashierDashboard");
+            };
+        } else {
             return $next($request);
-        }else {
-            return redirect("/");
-        }
-    }
+        }    }
 }
