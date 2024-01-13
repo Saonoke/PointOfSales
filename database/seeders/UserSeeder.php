@@ -18,27 +18,6 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-
-        $userData=[
-            [
-                'name' => 'kou',
-                'email' => 'kou@gmail.com',
-                'role' => 'admin',
-                'password' => bcrypt('asdfasdf')
-
-            ],
-            [
-                'name' => 'futaba',
-                'email' => 'futaba@gmail.com',
-                'role' => 'kasir',
-                'password' => bcrypt('asdfasdf')
-
-            ]
-        ];
-
-        foreach( $userData as $key => $val){
-            User::create($val);
-        }
-
+        User:: factory(5)->create();
     }
 }

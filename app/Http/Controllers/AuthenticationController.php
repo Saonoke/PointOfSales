@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Services\AuthenticationService;
@@ -11,13 +12,13 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticationController extends Controller
 {
-    private AuthenticationService $authenticationService;
 
     /**
      * @param AuthenticationService $authenticationService
      */
-    public function __construct(AuthenticationService $authenticationService)
-    {
+    public function __construct(
+        private AuthenticationService $authenticationService
+    ) {
         $this->authenticationService = $authenticationService;
     }
 
