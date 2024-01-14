@@ -12,14 +12,12 @@ return new class extends Migration
 
         Schema::create('member', function (Blueprint $table) {
             $table->id();
-
             $table->string('member_name');
             $table->string('address');
             $table->string('no_hp')->unique();
             $table->integer('total_point');
             $table->date('valid_until');
-
-
+            $table->timestamps();
         });
     }
 

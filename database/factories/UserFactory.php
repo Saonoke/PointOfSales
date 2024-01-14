@@ -27,7 +27,7 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'role' => Faker::create()->randomElement(['admin', 'cashier']),
+            'role' => fake()->randomElement(['admin', 'cashier']),
             'password' => bcrypt('asdfasdf')
         ];
     }

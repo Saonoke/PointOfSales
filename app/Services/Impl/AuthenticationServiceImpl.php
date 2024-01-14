@@ -18,7 +18,7 @@ class AuthenticationServiceImpl implements AuthenticationService{
             'password' => $request->password,
         ];
         if(Auth::attempt($credentials)){
-            return true;
+            return;
         }
     }
 }

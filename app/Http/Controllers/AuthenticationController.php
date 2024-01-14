@@ -33,16 +33,18 @@ class AuthenticationController extends Controller
     {
         $validated = $request->validated();
 
-        if($this->authenticationService->authenticate($request)){
+        try {
+            $this->authenticationService->authenticate($request);
             if (Auth::user()->role == 'admin') {
                 return redirect()->route('admin.dashboard');
             } else {
                 return redirect()->route('cashier.dashboard');
             }
-        } else {
+        } catch (\Exception $e) {
             return back()->withErrors([
                 'email' => 'Email or password is wrong',
-            ])->onlyInput('email');        }
+            ])->onlyInput('email');
+        }
     }
 
     public function doLogout(Request $request): RedirectResponse

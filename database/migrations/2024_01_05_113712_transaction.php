@@ -15,6 +15,7 @@ return new class extends Migration
             $table->decimal('total_purchase');
             $table->decimal('total_payment');
             $table->decimal('change');
+            $table->timestamps();
         });
     }
 
@@ -22,6 +23,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('transaction');
-
     }
 };

@@ -26,25 +26,25 @@ Route::group(['middleware' => 'isGuest'], function () {
     Route::post('/login', [AuthenticationController::class, 'doLogin']);
 });
 
-Route::get('/logout', [AuthenticationController::class, 'doLogout'])->middleware('isMember')->name('logout');
+Route::get('/logout', [AuthenticationController::class, 'doLogout'])->middleware('isAuth')->name('logout');
 
 
 // Admin Dashboard routes
 Route::group(['prefix' => 'admin'], function () {
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->middleware('isMember', 'userAccess:admin')->name('admin.dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->middleware('isAuth', 'userAccess:admin')->name('admin.dashboard');
 });
 
 // Cashier Dashboard routes
 Route::group(['prefix' => 'cashier'], function () {
-    Route::get('/dashboard', [CashierDashboardController::class, 'index'])->middleware('isMember', 'userAccess:cashier')->name('cashier.dashboard');
+    Route::get('/dashboard', [CashierDashboardController::class, 'index'])->middleware('isAuth', 'userAccess:cashier')->name('cashier.dashboard');
 });
 
 
-// Route::group(['prefix' => 'admin', 'middleware' => 'isMember', 'userAccess:admin'], function () {
+// Route::group(['prefix' => 'admin', 'middleware' => 'isAuth', 'userAccess:admin'], function () {
 //     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 // });
 
-// Route::group(['prefix' => 'cashier', 'middleware' => 'isMember', 'userAccess:cashier'], function () {
+// Route::group(['prefix' => 'cashier', 'middleware' => 'isAuth', 'userAccess:cashier'], function () {
 //     Route::get('/dashboard', [CashierDashboardController::class, 'index'])->name('cashier.dashboard');
 // });
 
