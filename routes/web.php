@@ -21,4 +21,16 @@ Route::get('/dashboard',function(){
     return view('dashboard');
 });
 
+Route::get('/daftarProduk',function(){
+    return view('daftarProduk');
+});
+
+Route::get('/transaksi',function(){
+    return view('transaksi');
+});
+
+Route::get('/daftarMember',function(){
+    return view('daftarMember');
+});
+
 
