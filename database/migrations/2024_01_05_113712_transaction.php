@@ -12,9 +12,9 @@ return new class extends Migration
         Schema::create('transaction', function (Blueprint $table) {
             $table->id();
             $table->dateTime('transaction_date');
-            $table->decimal('total_purchase')->nullable();
-            $table->decimal('total_payment')->nullable();
-            $table->decimal('change')->nullable();
+            $table->decimal('total_purchase');
+            $table->decimal('total_payment');
+            $table->decimal('change');
         });
     }
 

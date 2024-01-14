@@ -4,9 +4,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class UserMiddleware
+class IsGuest
 {
     /**
      * Handle an incoming request.
@@ -15,13 +16,10 @@ class UserMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->session()->exists("userData")) {
-            if (session('userData.role') == 'admin') {
-                return redirect("/adminDashboard");
-            } else {
-                return redirect("/cashierDashboard");
-            };
+        if (Auth::check()) {
+            return redirect()->route((Auth::user()->role) . '.dashboard');
         } else {
             return $next($request);
-        }    }
+        }
+    }
 }

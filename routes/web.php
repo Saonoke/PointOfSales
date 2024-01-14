@@ -20,18 +20,31 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::controller(AuthenticationController::class)->group(function () {
-    Route::get('/login', 'login')->middleware('user');
-    Route::post('/login', 'doLogin')->middleware('user');
-    Route::get('/logout', 'doLogout');
+// Authentication routes
+Route::group(['middleware' => 'isGuest'], function () {
+    Route::get('/login', [AuthenticationController::class, 'login'])->name('login');
+    Route::post('/login', [AuthenticationController::class, 'doLogin']);
 });
 
-Route::controller(AdminDashboardController::class)->group(function () {
-    Route::get('/adminDashboard', 'index')->middleware('userAccess:admin');
-    
+Route::get('/logout', [AuthenticationController::class, 'doLogout'])->middleware('isMember')->name('logout');
+
+
+// Admin Dashboard routes
+Route::group(['prefix' => 'admin'], function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->middleware('isMember', 'userAccess:admin')->name('admin.dashboard');
 });
-Route::controller(CashierDashboardController::class)->group(function () {
-    Route::get('/cashierDashboard', 'index')->middleware('userAccess:kasir');
-    
+
+// Cashier Dashboard routes
+Route::group(['prefix' => 'cashier'], function () {
+    Route::get('/dashboard', [CashierDashboardController::class, 'index'])->middleware('isMember', 'userAccess:cashier')->name('cashier.dashboard');
 });
+
+
+// Route::group(['prefix' => 'admin', 'middleware' => 'isMember', 'userAccess:admin'], function () {
+//     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+// });
+
+// Route::group(['prefix' => 'cashier', 'middleware' => 'isMember', 'userAccess:cashier'], function () {
+//     Route::get('/dashboard', [CashierDashboardController::class, 'index'])->name('cashier.dashboard');
+// });
 

@@ -12,7 +12,7 @@ class CashierDashboardController extends Controller
     {
         return response()
             ->view("cashier.dashboard", [
-                "title" => "Beranda Admin"
+                "title" => "Beranda Kasir"
             ]);
     }
 }

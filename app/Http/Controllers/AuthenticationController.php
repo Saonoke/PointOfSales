@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AuthenticateRequest;
+use App\Http\Requests\UserPostRequest;
 use App\Services\AuthenticationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +21,6 @@ class AuthenticationController extends Controller
     public function __construct(
         private AuthenticationService $authenticationService
     ) {
-        $this->authenticationService = $authenticationService;
     }
 
     public function login(): Response
@@ -28,23 +29,20 @@ class AuthenticationController extends Controller
             ->view("user.login");
     }
 
-    public function doLogin(Request $request): Response|RedirectResponse
+    public function doLogin(AuthenticateRequest $request): Response|RedirectResponse
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required',
-            'password' => 'required|min:8',
-        ], [
-            'email.required' => 'Email is required',
-            'password.required' => 'Password is required',
-            'password.min' => 'Password must be at least 8 characters',
-        ]);
+        $validated = $request->validated();
 
-        if ($validator->fails()) {
-            return response()->view("user.login", [
-                "error" => $validator->errors()->first()
-            ]);
-        }
-        return $this->authenticationService->authenticate($request);
+        if($this->authenticationService->authenticate($request)){
+            if (Auth::user()->role == 'admin') {
+                return redirect()->route('admin.dashboard');
+            } else {
+                return redirect()->route('cashier.dashboard');
+            }
+        } else {
+            return back()->withErrors([
+                'email' => 'Email or password is wrong',
+            ])->onlyInput('email');        }
     }
 
     public function doLogout(Request $request): RedirectResponse
@@ -52,6 +50,6 @@ class AuthenticationController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect("/login");
+        return redirect()->route('login');
     }
 }
