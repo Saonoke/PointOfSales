@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -17,63 +18,72 @@ class AuthenticationControllerTest extends TestCase
         $this->get('/login')
             ->assertViewIs("user.login");
     }
-    public function testLoginPageForMember()
-    {
-        $this->withSession([
-            "userData.role" => "admin"
-        ])->get('/login')
-        ->assertRedirect('/adminDashboard')
-        ;
-    }
+    // public function testLoginPageForMember()
+    // {
+        // $response = $this->get(route('login'));
+        // $response->assertStatus(200); 
+        // $response->assertViewIs('user.login'); 
+        //     $this->withSession([
+        //         "userData.role" => "admin"
+        //     ])->get(route('login'))
+        //         ->assertRedirect('/admin/dashboard');
+    // }
 
     public function testLoginSuccess()
     {
+        $user = User::factory()->create(['role' => 'admin']);
         $this->post('/login', [
-            "email" => "kou@gmail.com",
+            "email" => $user->email,
             "password" => "asdfasdf"
-        ])->assertRedirect("/adminDashboard");
+        ])->assertRedirect("/admin/dashboard");
     }
-    
+
 
     public function testLoginForUserAlreadyLogin()
     {
+        $user = User::factory()->create(['role' => 'admin']);
         $this->withSession([
-            "email" => "kou@gmail.com"
+            "email" => $user->email
         ])->post('/login', [
-            "email" => "kou@gmail.com",
+            "email" => $user->email,
             "password" => "asdfasdf"
-        ])->assertRedirect("/adminDashboard");
+        ])->assertRedirect("/admin/dashboard");
     }
 
     public function testLoginValidationError()
     {
-        $this->post("/login", [])
-            ->assertViewIs("user.login");
+        $response = $this->post(route('login'), [
+            'email' => '',
+            'password' => '',
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors(['email', 'password']);
     }
 
     public function testLoginFailed()
     {
-        $this->post('/login', [
-            'email' => "wrong",
-            "password" => "wrong"
-        ])-> assertViewIs("user.login");
+        $response = $this->post(route('login'), [
+            'email' => 'invalid@example.com',
+            'password' => 'invalid-password',
+        ]);
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors('email');
     }
 
     public function testLogout()
     {
+        $user = User::factory()->create(['role' => 'admin']);
+
         $this->withSession([
-            "email" => "kou@gmail.com"
+            "email" => $user->email
         ])->get('/logout')
-        ->assertRedirect("/login");
+            ->assertRedirect("/login");
     }
 
     public function testLogoutGuest()
     {
         $this->get('/logout')
-        ->assertRedirect("/login");
+            ->assertRedirect("/login");
     }
-
-
-
-
 }

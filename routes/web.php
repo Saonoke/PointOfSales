@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\CashierDashboardController;
+use App\Http\Controllers\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,9 @@ Route::group(['prefix' => 'admin'], function () {
 // Cashier Dashboard routes
 Route::group(['prefix' => 'cashier'], function () {
     Route::get('/dashboard', [CashierDashboardController::class, 'index'])->middleware('isAuth', 'userAccess:cashier')->name('cashier.dashboard');
+    Route::get('/transaction', [TransactionController::class, 'index'])->middleware('isAuth', 'userAccess:cashier')->name('transaction.index');
+    Route::post('/transaction', [TransactionController::class, 'store'])->middleware('isAuth', 'userAccess:cashier')->name('transaction.store');
+
 });
 
 
