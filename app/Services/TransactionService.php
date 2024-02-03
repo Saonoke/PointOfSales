@@ -10,7 +10,7 @@ use App\Models\User;
 
 interface TransactionService
 {
-    public function findByUser(User $user) : Transaction;
+    public function findByUser(User $user);
     public function addTransaction(User $user) : Transaction;
     public function addItem(Transaction $transaction, Item $item, $qty) : TransactionDetail;
     public function calculateTotalPurchase(Transaction $transaction);

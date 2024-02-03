@@ -15,4 +15,9 @@ class Item extends Model
         'price',
         'stock'
     ];
+
+    public function transactionDetail()
+    {
+        return $this->hasMany(TransactionDetail::class);
+    }
 }

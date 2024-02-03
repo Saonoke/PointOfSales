@@ -11,7 +11,7 @@ use PHPUnit\Event\Tracer\Tracer;
 
 class TransactionServiceImpl implements TransactionService
 {
-    public function findByUser(User $user): Transaction
+    public function findByUser(User $user)
     {
         $transaction = Transaction::with(
             'transactionDetail',
@@ -43,6 +43,7 @@ class TransactionServiceImpl implements TransactionService
 
     public function calculateTotalPurchase(Transaction $transaction): void
     {
+        $transaction = Transaction::with('transactionDetail')->find($transaction->id);
         $totalPurchase = 0;
         foreach ($transaction->transactionDetail as $td) {
             $totalPurchase += $td->getSubTotal();

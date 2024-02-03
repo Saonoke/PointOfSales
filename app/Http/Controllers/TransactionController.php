@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TransactionRequest;
+use App\Models\Item;
 use App\Services\ItemService;
 use App\Services\TransactionService;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,27 +20,27 @@ class TransactionController extends Controller
     public function index()
     {
         $transaction = $this->transactionService->findByUser(auth()->user())->get();
-        $this->data['transaction'] = $transaction;
-        dd($transaction->toArray());
-        return response()
-            ->view("cashier.transaction", $this->data);
-    }
+        if ($transaction == null) {
+            return response()->view("cashier.transaction");
+        } else {
+            $transaction = $transaction->get();
+            // dd($transaction);
+            return response()->view("cashier.transaction", compact('transaction'));
+        }    }
 
     public function store(Request $request)
     {
-        // $validated = $request->validated();
-        $transaction = $this->transactionService->addTransaction(auth()->user());
+        $user = auth()->user();
+        $transaction = $this->transactionService->addTransaction($user);
         $items = $request->get('items');
+        $qty = $items[0]['qty'];
+        $itemID = array_column($items, 'item_id');
+        $items = Item::with('transactionDetail')->findMany($itemID);
+
         foreach ($items as $item) {
-            $itemID = $item['item_id'];
-            $qty = $item['qty'];
-            $item = $this->itemService->findByID($itemID);
-            if ($item) {
-                $transactionDetail = $this->transactionService->addItem($transaction, $item, $qty);
-            } else {
-                return redirect()->back()->with('error', 'Item not found!');
-            }
+            $transactionDetail = $this->transactionService->addItem($transaction, $item, $qty);
         }
+
         $this->transactionService->calculateTotalPurchase($transaction);
     }
 }
