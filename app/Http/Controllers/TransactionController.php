@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TransactionRequest;
 use App\Models\Item;
+use App\Models\TransactionDetail;
 use App\Services\ItemService;
 use App\Services\TransactionService;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,13 +21,8 @@ class TransactionController extends Controller
     public function index()
     {
         $transaction = $this->transactionService->findByUser(auth()->user())->get();
-        if ($transaction == null) {
-            return response()->view("cashier.transaction");
-        } else {
-            $transaction = $transaction->get();
-            // dd($transaction);
-            return response()->view("cashier.transaction", compact('transaction'));
-        }    }
+        return response()->view("cashier.transaction", compact('transaction'));
+    }
 
     public function store(Request $request)
     {
@@ -35,12 +31,20 @@ class TransactionController extends Controller
         $items = $request->get('items');
         $qty = $items[0]['qty'];
         $itemID = array_column($items, 'item_id');
+        $qty = array_column($items, 'qty');
         $items = Item::with('transactionDetail')->findMany($itemID);
 
-        foreach ($items as $item) {
-            $transactionDetail = $this->transactionService->addItem($transaction, $item, $qty);
+        $transactionDetails = [];
+        foreach ($items as $key => $item) {
+            $transactionDetails[] = [
+                'transaction_id' => $transaction->id,
+                'item_id' => $item->id,
+                'qty' => $qty[$key],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
         }
-
+        TransactionDetail::insert($transactionDetails);
         $this->transactionService->calculateTotalPurchase($transaction);
     }
 }

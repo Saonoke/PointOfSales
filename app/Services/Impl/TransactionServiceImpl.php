@@ -11,7 +11,7 @@ use PHPUnit\Event\Tracer\Tracer;
 
 class TransactionServiceImpl implements TransactionService
 {
-    public function findByUser(User $user)
+    public function findByUser(User $user) : ?transaction
     {
         $transaction = Transaction::with(
             'transactionDetail',
